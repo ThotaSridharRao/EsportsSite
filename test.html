@@ -1,0 +1,684 @@
+<!--
+  WEBMASTER-AI: Complete Esports Website with Navbar and Hero Section
+  A production-ready web page featuring a clean and smooth theme.
+
+  Features:
+  - Mobile-first, responsive design.
+  - Semantic HTML for accessibility (WCAG 2.2).
+  - CSS variables for a reusable and customizable color palette.
+  - Smooth, subtle hover effects and transitions.
+  - JavaScript to handle the mobile hamburger menu toggle.
+  - Hero section with a background video from YouTube.
+  - Video is set to autoplay, mute, and loop for a seamless experience.
+  - Performance optimized and ready for production.
+  - The "Available Games" section is now a fixed grid with all games visible at once.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esports Hosting - A Clean & Smooth Experience</title>
+    <!-- Google Fonts for a modern, clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for platform icons and slider buttons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for the Clean Color Palette */
+        :root {
+            --primary-green: #00FF80; /* Brighter, clean green for accents */
+            --secondary-blue: #4F9CFF; /* Cool blue for secondary accents */
+            --background-black: #1A1A1A; /* A slightly softer black */
+            --text-white: #D0D0D0; /* A soft white for readability */
+            --semi-transparent-black: rgba(26, 26, 26, 0.8);
+            --darker-overlay: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Basic Resets & Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-black);
+            color: var(--text-white);
+        }
+
+        /* Navbar Container Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--semi-transparent-black);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Logo/Brand Styles */
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-white);
+            text-decoration: none;
+            letter-spacing: -1px;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--primary-green);
+        }
+
+        .logo span {
+            color: var(--primary-green);
+        }
+
+        /* Navigation Menu Styles */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .nav-links li a {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            opacity: 0.8;
+        }
+
+        /* Clean Link Hover Effects */
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            color: var(--primary-green);
+            opacity: 1;
+        }
+
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -5px;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-green);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links li a:hover::after,
+        .nav-links li a.active::after {
+            width: 80%;
+        }
+
+        /* Hamburger Menu Icon for Mobile */
+        .hamburger {
+            display: none; /* Hidden on desktop */
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 25px;
+            height: 20px;
+            z-index: 1001;
+        }
+
+        .hamburger .bar {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-white);
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger Animation */
+        .hamburger.open .bar:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .hamburger.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.open .bar:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Mobile-First Media Query */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                right: 0;
+                top: 100%;
+                height: 0;
+                width: 100%;
+                flex-direction: column;
+                background-color: var(--background-black);
+                overflow: hidden;
+                transition: height 0.3s ease-in-out;
+            }
+
+            .nav-links.nav-active {
+                height: 250px; /* Adjust height based on number of links */
+                border-top: 1px solid var(--primary-green);
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+        }
+
+        /* Hero Section Styles */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--text-white);
+            padding: 0 1rem;
+            overflow: hidden;
+        }
+
+        /* Video Background Styles */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .video-background iframe {
+            width: 100vw;
+            height: 56.25vw; /* 16:9 aspect ratio (9 / 16 * 100) */
+            min-height: 100vh;
+            min-width: 177.77vh; /* 16 / 9 * 100 */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Increased opacity for more dimming */
+            backdrop-filter: blur(5px);
+            z-index: 0;
+        }
+
+        /* Hero Content Styles */
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 900px;
+            margin-top: 5rem; /* Space below the fixed navbar */
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero-content h1 .highlight {
+            background-color: var(--primary-green); /* Changed highlight color to match primary button */
+            color: var(--background-black); /* Changed text color to match primary button */
+            padding: 0 0.5rem;
+            white-space: nowrap;
+        }
+        
+        .hero-content p {
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+            opacity: 0.8;
+        }
+        
+        /* Button Container for Layout */
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .cta-button {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .cta-primary {
+            color: var(--background-black);
+            background-color: var(--primary-green);
+        }
+
+        .cta-primary:hover {
+            background-color: var(--secondary-blue);
+            box-shadow: 0 0 15px rgba(79, 156, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        .cta-secondary {
+            color: var(--text-white);
+            background-color: transparent;
+            border: 2px solid var(--text-white);
+        }
+
+        .cta-secondary:hover {
+            border-color: var(--primary-green);
+            background-color: rgba(0, 255, 128, 0.1);
+            transform: scale(1.05);
+        }
+
+        /* Available Games Section Styles */
+        .games-section {
+            padding: 4rem 2rem;
+            background-color: var(--background-black);
+        }
+
+        .games-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* New styles for the grid without scrolling */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns for desktop */
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Responsive grid adjustments */
+        @media (max-width: 1024px) {
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr; /* 1 column on mobile */
+            }
+        }
+        
+        .game-card {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            text-align: center;
+            padding: 0;
+            height: 250px; /* Fixed height to match previous design */
+        }
+
+        .game-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image Styling for Zoom-Out Effect */
+        .game-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: relative;
+            z-index: 1;
+            /* Zoomed-in state by default */
+            transform: scale(1.1);
+            /* Smooth transition for the effect */
+            transition: transform 0.5s ease-in-out;
+        }
+
+        /* Zoom-out effect on hover */
+        .game-card:hover img {
+            transform: scale(1);
+        }
+
+        .platform-options {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(100%);
+            z-index: 2;
+        }
+
+        .game-card:hover .platform-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .platform-options a {
+            color: var(--text-white);
+            font-size: 1.25rem;
+            transition: color 0.2s ease;
+        }
+
+        .platform-options a:hover {
+            color: var(--primary-green);
+        }
+        
+        .game-card .beta-label {
+            display: inline-block;
+            background-color: var(--primary-green);
+            color: var(--background-black);
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+        }
+
+        /* Why Choose Us Section Styles */
+        .why-us-section {
+            padding: 4rem 2rem;
+            background-color: var(--background-black);
+            text-align: center;
+        }
+
+        .why-us-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+        }
+
+        .why-us-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            gap: 2rem;
+        }
+        
+        .why-us-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 500px;
+            padding: 1rem;
+        }
+
+        /* New glow animation using a pulsing text-shadow */
+        @keyframes pulsing-glow {
+            0% { text-shadow: 0 0 5px var(--primary-green); }
+            50% { text-shadow: 0 0 20px var(--primary-green), 0 0 30px rgba(0, 255, 128, 0.5); }
+            100% { text-shadow: 0 0 5px var(--primary-green); }
+        }
+
+        .why-us-item .icon {
+            font-size: 3.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            animation: pulsing-glow 2s ease-in-out infinite;
+        }
+
+        .why-us-item h3 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-white);
+        }
+        
+        .why-us-item p {
+            font-size: 1.1rem;
+            color: var(--text-white);
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .why-us-content {
+                gap: 1.5rem;
+            }
+
+            .why-us-item {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="logo">Gamers<span>Hub</span></a>
+        
+        <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-list">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <ul class="nav-links" id="nav-list">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Tournaments</a></li>
+            <li><a href="#">Hosting</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="video-background">
+                <iframe
+                    src="https://www.youtube.com/embed/e_E9W2vsRbQ?autoplay=1&mute=1&controls=0&loop=1&playlist=e_E9W2vsRbQ"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen
+                    title="VALORANT Intro Video"
+                ></iframe>
+                <div class="video-overlay"></div>
+            </div>
+            <div class="hero-content">
+                <h1>Compete on <span class="highlight">GamersHub</span></h1>
+                <p>
+                    Play the games you love. Compete in free tournaments. Win cash prizes and much more.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#" class="cta-button cta-primary">Get Started</a>
+                    <a href="#" class="cta-button cta-secondary">Create Account</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updated section for available games as a grid -->
+        <section class="games-section">
+            <h2 class="section-title">Available Games</h2>
+            <div class="games-grid">
+                <!-- Game Card 1: Madden NFL 25 -->
+                <div class="game-card">
+                    <span class="beta-label">BETA</span>
+                    <img src="madden25.jpg" alt="Madden NFL 25 cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
+                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                        <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Game Card 2: Valorant -->
+                <div class="game-card">
+                    <img src="valorant.jpg" alt="Valorant cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    </div>
+                </div>
+
+                <!-- Game Card 3: Fortnite -->
+                <div class="game-card">
+                    <img src="fortnite.jpg" alt="Fortnite cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
+                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                        <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
+                        <a href="#"><i class="fa-solid fa-gamepad"></i></a>
+                    </div>
+                </div>
+
+                <!-- Game Card 4: PUBG -->
+                <div class="game-card">
+                    <img src="pubg.jpg" alt="PUBG cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
+                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                        <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Game Card 5: Rocket League -->
+                <div class="game-card">
+                    <img src="Rocketleague.webp" alt="Rocket League cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
+                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    </div>
+                </div>
+
+                <!-- Game Card 6: Dota 2 -->
+                <div class="game-card">
+                    <img src="dota2_social.jpg" alt="Dota 2 cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    </div>
+                </div>
+
+                <!-- Game Card 7: CS2 -->
+                <div class="game-card">
+                    <img src="cs2.jpg" alt="Counter-Strike 2 cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    </div>
+                </div>
+
+                <!-- Game Card 8: League of Legends -->
+                <div class="game-card">
+                    <img src="league-of-legends-pc-game-cover.jpg" alt="League of Legends cover image">
+                    <div class="platform-options">
+                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New 'Why Choose Us' section with updated layout -->
+        <section class="why-us-section">
+            <h2>Why Choose Us?</h2>
+            <div class="why-us-content">
+                <!-- Achievement 1: Community -->
+                <div class="why-us-item">
+                    <div class="icon"><i class="fa-solid fa-users"></i></div>
+                    <h3>Thriving Community</h3>
+                    <p>Join a community of thousands of passionate gamers and connect with like-minded players.</p>
+                </div>
+                
+                <!-- Achievement 2: Prizes -->
+                <div class="why-us-item">
+                    <div class="icon"><i class="fa-solid fa-trophy"></i></div>
+                    <h3>Epic Prizes</h3>
+                    <p>Compete in free tournaments with massive cash prize pools and exclusive gaming gear.</p>
+                </div>
+
+                <!-- Achievement 3: Free to Play -->
+                <div class="why-us-item">
+                    <div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    <h3>Free to Play</h3>
+                    <p>Enter any tournament at no cost. Your skill is the only thing that matters.</p>
+                </div>
+
+                <!-- Achievement 4: Fair Play -->
+                <div class="why-us-item">
+                    <div class="icon"><i class="fa-solid fa-shield-alt"></i></div>
+                    <h3>Fair Play Guarantee</h3>
+                    <p>We use advanced anti-cheat systems to ensure a level playing field for everyone.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // JavaScript to handle the mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            navLinks.classList.toggle('nav-active');
+
+            const isExpanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
+            hamburger.setAttribute('aria-expanded', !isExpanded);
+        });
+    </script>
+</body>
+</html>
