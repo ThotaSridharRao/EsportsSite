@@ -1,684 +1,964 @@
-<!--
-  WEBMASTER-AI: Complete Esports Website with Navbar and Hero Section
-  A production-ready web page featuring a clean and smooth theme.
-
-  Features:
-  - Mobile-first, responsive design.
-  - Semantic HTML for accessibility (WCAG 2.2).
-  - CSS variables for a reusable and customizable color palette.
-  - Smooth, subtle hover effects and transitions.
-  - JavaScript to handle the mobile hamburger menu toggle.
-  - Hero section with a background video from YouTube.
-  - Video is set to autoplay, mute, and loop for a seamless experience.
-  - Performance optimized and ready for production.
-  - The "Available Games" section is now a fixed grid with all games visible at once.
--->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esports Hosting - A Clean & Smooth Experience</title>
-    <!-- Google Fonts for a modern, clean look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome for platform icons and slider buttons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* CSS Variables for the Clean Color Palette */
-        :root {
-            --primary-green: #00FF80; /* Brighter, clean green for accents */
-            --secondary-blue: #4F9CFF; /* Cool blue for secondary accents */
-            --background-black: #1A1A1A; /* A slightly softer black */
-            --text-white: #D0D0D0; /* A soft white for readability */
-            --semi-transparent-black: rgba(26, 26, 26, 0.8);
-            --darker-overlay: rgba(0, 0, 0, 0.7);
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="GamersHub — host and compete. Clean, accessible esports landing page with responsive layout and video hero." />
+  <meta name="theme-color" content="#0b0b0b" />
+  <title>GamersHub — Compete | Host | Win</title>
 
-        /* Basic Resets & Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <!-- Fonts & icons (preload & preconnect for performance) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background-black);
-            color: var(--text-white);
-        }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        /* Navbar Container Styles */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--semi-transparent-black);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
+  <style>
+    /* =========================
+       Theme variables
+       ========================= */
+    :root{
+      --bg: #0f0f10;                /* page background */
+      --panel: #1f1f20;             /* panels/cards */
+      --muted: #9aa0a6;             /* muted text */
+      --copy: #e6e6e6;              /* main copy */
+      --accent: #FFD700;            /* primary accent */
+      --accent-2: #e0ac10;          /* secondary accent (a darker shade of yellow) */
+      --glass: rgba(20,20,20,0.55);
+      --radius: 12px;
+      --container: 1200px;
+      --ease: 180ms cubic-bezier(.2,.9,.2,1);
+      --max-hero-height: 880px;
+      --focus: 3px solid rgba(255, 215, 0, 0.12);
+    }
 
-        /* Logo/Brand Styles */
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-white);
-            text-decoration: none;
-            letter-spacing: -1px;
-            transition: color 0.3s ease;
-        }
+    /* Respect reduced motion preferences */
+    @media (prefers-reduced-motion: reduce){
+      :root{ --ease: 0ms; }
+      *{ transition-duration: 0ms !important; animation-duration: 0ms !important; animation-iteration-count: 1 !important; }
+    }
 
-        .logo:hover {
-            color: var(--primary-green);
-        }
+    /* =========================
+       Base resets & accessibility
+       ========================= */
+    *,*::before,*::after{ box-sizing: border-box; }
+    html,body{ height: 100%; }
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,var(--bg),#070707 140%);
+      color:var(--copy);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      -webkit-text-size-adjust:100%;
+    }
 
-        .logo span {
-            color: var(--primary-green);
-        }
+    a { color: inherit; text-decoration: none; }
+    img,video,iframe{ max-width:100%; display:block; }
+    ul{ list-style: none; padding:0; margin:0; }
 
-        /* Navigation Menu Styles */
-        .nav-links {
-            list-style: none;
-            display: flex;
-            transition: transform 0.3s ease-in-out;
-        }
+    /* Skip link for keyboard users */
+    .skip-link{
+      position: absolute;
+      left: -999px;
+      top: auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+    }
+    .skip-link:focus{
+      left:1rem;
+      top:1rem;
+      width:auto;
+      height:auto;
+      padding:.5rem .75rem;
+      background:rgba(0,0,0,.8);
+      border-radius:6px;
+      color:var(--copy);
+      z-index: 9999;
+    }
 
-        .nav-links li a {
-            color: var(--text-white);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
-            position: relative;
-            opacity: 0.8;
-        }
+    /* =========================
+       Layout helpers
+       ========================= */
+    .container{
+      width: min(94%, var(--container));
+      margin: 0 auto;
+    }
 
-        /* Clean Link Hover Effects */
-        .nav-links li a:hover,
-        .nav-links li a.active {
-            color: var(--primary-green);
-            opacity: 1;
-        }
+    header.site-header{
+      position: fixed;
+      inset: 0 0 auto 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:1rem min(3%, 28px);
+      background: var(--glass);
+      backdrop-filter: blur(8px) saturate(1.1);
+      z-index:1200;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
 
-        .nav-links li a::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -5px;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-green);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      font-weight:800;
+      letter-spacing:-0.5px;
+      color:var(--copy);
+      font-size:1.125rem;
+    }
+    .brand .accent{ color:var(--accent); }
 
-        .nav-links li a:hover::after,
-        .nav-links li a.active::after {
-            width: 80%;
-        }
+    nav.primary {
+      display:flex;
+      align-items:center;
+      gap:1rem;
+    }
 
-        /* Hamburger Menu Icon for Mobile */
-        .hamburger {
-            display: none; /* Hidden on desktop */
-            cursor: pointer;
-            flex-direction: column;
-            justify-content: space-around;
-            width: 25px;
-            height: 20px;
-            z-index: 1001;
-        }
+    /* Nav links — desktop */
+    .nav-links{ display:flex; gap:.25rem; align-items:center; }
+    .nav-links a{
+      color:var(--copy);
+      padding:.55rem .85rem;
+      border-radius:8px;
+      font-weight:600;
+      font-size:.93rem;
+      opacity:.92;
+      transition: transform var(--ease), background-color var(--ease), color var(--ease);
+    }
+    .nav-links a:hover,
+    .nav-links a:focus{ color:var(--accent); transform: translateY(-2px); outline: none; }
+    .nav-links a.active{ color:var(--accent); }
 
-        .hamburger .bar {
-            width: 100%;
-            height: 2px;
-            background-color: var(--text-white);
-            border-radius: 10px;
-            transition: all 0.3s ease-in-out;
-        }
+    /* CTA in header */
+    .header-cta{
+      padding:.55rem .95rem;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#06110a;
+      font-weight:700;
+      box-shadow: 0 6px 18px rgba(255, 215, 0, 0.06);
+      transition: transform var(--ease), box-shadow var(--ease);
+    }
+    .header-cta:focus{ box-shadow: 0 8px 26px rgba(255, 215, 0, 0.10); outline: none; }
 
-        /* Hamburger Animation */
-        .hamburger.open .bar:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-        .hamburger.open .bar:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.open .bar:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
+    /* Hamburger (mobile) */
+    .hamburger{
+      display:none;
+      background:none;
+      border:0;
+      padding:.5rem;
+      margin-left:.5rem;
+      cursor:pointer;
+      color:var(--copy);
+    }
+    .hamburger .bars{ display:inline-block; width:22px; height:2px; background:var(--copy); border-radius:2px; position:relative; transition:var(--ease); }
+    .hamburger .bars::before, .hamburger .bars::after{
+      content:""; position:absolute; left:0; right:0; height:2px; background:var(--copy); border-radius:2px; transition:var(--ease);
+    }
+    .hamburger .bars::before{ top:-7px; }
+    .hamburger .bars::after{ top:7px; }
+    .hamburger[aria-expanded="true"] .bars{ background: transparent; }
+    .hamburger[aria-expanded="true"] .bars::before{ transform: translateY(7px) rotate(-45deg); top:0; }
+    .hamburger[aria-expanded="true"] .bars::after{ transform: translateY(-7px) rotate(45deg); top:0; }
 
-        /* Mobile-First Media Query */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem 1.5rem;
-            }
+    /* Mobile nav overlay */
+    .mobile-nav{
+      display:none;
+      position:fixed;
+      inset: 72px 0 0 0;
+      background: linear-gradient(180deg, rgba(7,7,7,0.95), rgba(7,7,7,0.98));
+      padding:1.5rem;
+      z-index:1100;
+      overflow:auto;
+    }
+    .mobile-nav.is-open{
+      display: block;
+    }
+    .mobile-nav a{
+      display:block;
+      padding:.85rem 1rem;
+      border-radius:8px;
+      margin-bottom:.5rem;
+      font-weight:700;
+    }
 
-            .hamburger {
-                display: flex;
-            }
+    /* =========================
+       Hero section
+       ========================= */
+    .hero {
+      position:relative;
+      height: 80vh;
+      min-height: 600px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      overflow:hidden;
+      color: #fff;
+      padding: 2rem 1rem;
+    }
+    .hero__bg-slider{
+      position: absolute;
+      inset: 0;
+    }
+    .hero__bg-slider img{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      transform: scale(1.1);
+    }
+    .hero__bg-slider img.active {
+      opacity: 1;
+      transform: scale(1);
+    }
 
-            .nav-links {
-                position: absolute;
-                right: 0;
-                top: 100%;
-                height: 0;
-                width: 100%;
-                flex-direction: column;
-                background-color: var(--background-black);
-                overflow: hidden;
-                transition: height 0.3s ease-in-out;
-            }
 
-            .nav-links.nav-active {
-                height: 250px; /* Adjust height based on number of links */
-                border-top: 1px solid var(--primary-green);
-            }
+    .hero__overlay{
+      position:absolute;
+      inset:0;
+      background: linear-gradient(90deg, #0f0f10 15%, transparent 80%);
+      z-index:1;
+    }
 
-            .nav-links li {
-                width: 100%;
-                text-align: center;
-                padding: 1rem 0;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            }
+    .hero__content{
+      position:relative;
+      z-index:2;
+      width: min(94%, var(--container));
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+      padding:2rem;
+      max-width:500px;
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .hero__content.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-            .nav-links li:last-child {
-                border-bottom: none;
-            }
-        }
+    .hero__content .logo{
+      width: 80px;
+      height: 80px;
+      background: var(--panel);
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .hero__content .logo img{
+      width: 60%;
+      height: auto;
+      object-fit: contain;
+    }
+    .hero__content .tournament-name{
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin: 0;
+    }
+    .hero__content .prize-pool{
+      font-size: 1.1rem;
+      color: var(--accent);
+      font-weight: bold;
+    }
+    .hero__content p{
+      color: var(--muted);
+      max-width: 400px;
+      line-height: 1.5;
+    }
+    
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:.6rem;
+      padding:.55rem 1rem; /* Reduced padding for smaller button */
+      border-radius:999px;
+      font-weight:700;
+      cursor:pointer;
+      border:0;
+      transition: transform var(--ease), box-shadow var(--ease);
+      text-decoration:none;
+      margin-top:1rem;
+    }
+    .btn--primary {
+     display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .75rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+    width:max-content;
+    border: 0;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    text-decoration: none;
+    margin-top: 1rem;
+    min-width: 150px;
+    justify-content: center;
+    
+    /* Styles specifically for the primary button */
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #06110a;
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.06);
+}
+    .btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(255, 215, 0, 0.12);
+}
 
-        /* Hero Section Styles */
-        .hero-section {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--text-white);
-            padding: 0 1rem;
-            overflow: hidden;
-        }
+    .btn--primary:focus {
+        outline: none;
+        box-shadow: var(--focus);
+        transform: translateY(-2px);
+    }
 
-        /* Video Background Styles */
-        .video-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
 
-        .video-background iframe {
-            width: 100vw;
-            height: 56.25vw; /* 16:9 aspect ratio (9 / 16 * 100) */
-            min-height: 100vh;
-            min-width: 177.77vh; /* 16 / 9 * 100 */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+    /* =========================
+       Matches / Panels Grid
+       ========================= */
+    main{ margin-top:72px; } /* header height */
+    .section{
+      padding: clamp(2rem, 4vw, 4rem) 1rem;
+    }
 
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Increased opacity for more dimming */
-            backdrop-filter: blur(5px);
-            z-index: 0;
-        }
+    .panels{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:1.25rem;
+      align-items:start;
+    }
 
-        /* Hero Content Styles */
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 900px;
-            margin-top: 5rem; /* Space below the fixed navbar */
-        }
+    .panel{
+      background:var(--panel);
+      padding:1.25rem;
+      border-radius:var(--radius);
+      box-shadow: 0 6px 26px rgba(0,0,0,0.35);
+      color:var(--copy);
+    }
 
-        .hero-content h1 {
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 1rem;
-            line-height: 1.1;
-        }
+    .panel--large{ grid-column: span 6; }
+    .panel--small{ grid-column: span 3; min-width:240px; }
 
-        .hero-content h1 .highlight {
-            background-color: var(--primary-green); /* Changed highlight color to match primary button */
-            color: var(--background-black); /* Changed text color to match primary button */
-            padding: 0 0.5rem;
-            white-space: nowrap;
-        }
-        
-        .hero-content p {
-            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-            font-weight: 400;
-            max-width: 600px;
-            margin: 0 auto 2rem auto;
-            opacity: 0.8;
-        }
-        
-        /* Button Container for Layout */
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
+    .panel h3{ margin:0 0 .6rem 0; color:var(--accent); font-size:1.05rem; }
+    .tournament-list li{ display:flex; justify-content:space-between; gap:1rem; padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+    .tournament-list li:last-child{ border-bottom: none; }
+    .tournament-list h4{ margin:0; font-size:1rem; font-weight:700; color:var(--copy); }
+    .tournament-list p{ margin:0; color:var(--muted); font-size:.88rem; }
 
-        .cta-button {
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            text-align: center;
-        }
+    .live-badge{
+      display:inline-block;
+      background:#ff2f2f;
+      color:white;
+      padding:.25rem .6rem;
+      border-radius:6px;
+      font-weight:800;
+      font-size:.78rem;
+      box-shadow: 0 6px 18px rgba(255,47,47,0.12);
+    }
 
-        .cta-primary {
-            color: var(--background-black);
-            background-color: var(--primary-green);
-        }
+    /* =========================
+       Highlights Section
+       ========================= */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .video-clip {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      transition: transform var(--ease);
+    }
+    
+    .video-clip:hover {
+      transform: translateY(-5px);
+    }
+    
+    .video-clip iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
 
-        .cta-primary:hover {
-            background-color: var(--secondary-blue);
-            box-shadow: 0 0 15px rgba(79, 156, 255, 0.7);
-            transform: scale(1.05);
-        }
+    /* =========================
+       Why choose us / CTA / Footer
+       ========================= */
+    .why-grid{
+      display:grid;
+      gap:1rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      align-items:start;
+      margin-top:1rem;
+    }
+    .why-item{ padding:1rem; background:transparent; text-align:center; }
+    .why-item .fa{ font-size:2.2rem; color:var(--accent); display:block; margin-bottom:.6rem; }
+    .why-item h3{ color:var(--copy); }
 
-        .cta-secondary {
-            color: var(--text-white);
-            background-color: transparent;
-            border: 2px solid var(--text-white);
-        }
+    .cta-hero{
+      display:flex; gap:1rem; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:1rem;
+    }
 
-        .cta-secondary:hover {
-            border-color: var(--primary-green);
-            background-color: rgba(0, 255, 128, 0.1);
-            transform: scale(1.05);
-        }
+    footer.site-footer{
+      padding:2.5rem 1rem;
+      background:#070707;
+      color:var(--muted);
+      margin-top:2rem;
+    }
+    .footer-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; max-width:var(--container); margin:0 auto; }
+    .footer-column h4{ color:var(--copy); font-weight:700; margin-bottom:.6rem; }
+    .footer-column ul{ list-style: none; padding:0; margin:0; }
+    .footer-column ul a{ color:var(--muted); text-decoration:none; }
+    .footer-bottom{ text-align:center; margin-top:1.25rem; font-size:.9rem; color:rgba(255,255,255,0.45); }
+    .footer-brand{ display:flex; flex-direction:column; gap:0.5rem; }
 
-        /* Available Games Section Styles */
-        .games-section {
-            padding: 4rem 2rem;
-            background-color: var(--background-black);
-        }
+    /* =========================
+       Responsive
+       ========================= */
+    @media (max-width:1100px){
+      .panels{ grid-template-columns: repeat(6, 1fr); }
+      .panel--large{ grid-column: span 6; }
+      .panel--small{ grid-column: span 6; }
+    }
+    @media (max-width:820px){
+      .nav-links{ display:none; }
+      .hamburger{ display:inline-flex; }
+      .mobile-nav.is-open {
+          display: block;
+      }
+      .panels{ grid-template-columns: repeat(6, 1fr); }
+      .panel--large{ grid-column: span 6; }
+      .panel--small{ grid-column: span 6; }
+      .footer-grid{ grid-template-columns: 1fr; text-align:center; }
+    }
+    @media (max-width:480px){
+      .hero{ padding-top:5rem; padding-bottom:2rem; }
+      .hero__title{ font-size:1.6rem; }
+      .brand{ font-size:1rem; }
+    }
+    
+    .panel-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
 
-        .games-section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
+    .main-panel {
+      grid-column: span 6;
+    }
 
-        /* New styles for the grid without scrolling */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 columns for desktop */
-            gap: 1.5rem;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Responsive grid adjustments */
-        @media (max-width: 1024px) {
-            .games-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
-            }
-        }
-
-        @media (max-width: 768px) {
-            .games-grid {
-                grid-template-columns: 1fr; /* 1 column on mobile */
-            }
-        }
-        
-        .game-card {
-            background-color: #2a2a2a;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            text-align: center;
-            padding: 0;
-            height: 250px; /* Fixed height to match previous design */
-        }
-
-        .game-card:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Image Styling for Zoom-Out Effect */
-        .game-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            position: relative;
-            z-index: 1;
-            /* Zoomed-in state by default */
-            transform: scale(1.1);
-            /* Smooth transition for the effect */
-            transition: transform 0.5s ease-in-out;
-        }
-
-        /* Zoom-out effect on hover */
-        .game-card:hover img {
-            transform: scale(1);
-        }
-
-        .platform-options {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40px;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateY(100%);
-            z-index: 2;
-        }
-
-        .game-card:hover .platform-options {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .platform-options a {
-            color: var(--text-white);
-            font-size: 1.25rem;
-            transition: color 0.2s ease;
-        }
-
-        .platform-options a:hover {
-            color: var(--primary-green);
-        }
-        
-        .game-card .beta-label {
-            display: inline-block;
-            background-color: var(--primary-green);
-            color: var(--background-black);
-            font-weight: 700;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 3;
-        }
-
-        /* Why Choose Us Section Styles */
-        .why-us-section {
-            padding: 4rem 2rem;
-            background-color: var(--background-black);
-            text-align: center;
-        }
-
-        .why-us-section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-        }
-
-        .why-us-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 800px;
-            margin: 0 auto;
-            gap: 2rem;
-        }
-        
-        .why-us-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            max-width: 500px;
-            padding: 1rem;
-        }
-
-        /* New glow animation using a pulsing text-shadow */
-        @keyframes pulsing-glow {
-            0% { text-shadow: 0 0 5px var(--primary-green); }
-            50% { text-shadow: 0 0 20px var(--primary-green), 0 0 30px rgba(0, 255, 128, 0.5); }
-            100% { text-shadow: 0 0 5px var(--primary-green); }
-        }
-
-        .why-us-item .icon {
-            font-size: 3.5rem;
-            color: var(--primary-green);
-            margin-bottom: 1rem;
-            animation: pulsing-glow 2s ease-in-out infinite;
-        }
-
-        .why-us-item h3 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-white);
-        }
-        
-        .why-us-item p {
-            font-size: 1.1rem;
-            color: var(--text-white);
-            opacity: 1;
-        }
-        
-        @media (max-width: 768px) {
-            .why-us-content {
-                gap: 1.5rem;
-            }
-
-            .why-us-item {
-                max-width: 100%;
-            }
-        }
-    </style>
+    .right-column {
+      grid-column: span 6;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+  </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <nav class="navbar">
-        <a href="#" class="logo">Gamers<span>Hub</span></a>
-        
-        <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-list">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
+  <header class="site-header" role="banner">
+    <div class="brand" aria-hidden="false">
+      <span>Gamers<span class="accent">Hub</span></span>
+    </div>
 
-        <ul class="nav-links" id="nav-list">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">Tournaments</a></li>
-            <li><a href="#">Hosting</a></li>
-            <li><a href="#">Pricing</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
+    <nav class="primary" role="navigation" aria-label="Primary">
+      <div class="nav-links" role="menubar" aria-hidden="false">
+        <a href="#" role="menuitem" class="active" aria-current="page">Home</a>
+        <a href="#tournaments" role="menuitem">Tournaments</a>
+        <a href="#hosting" role="menuitem">Hosting</a>
+        <a href="#pricing" role="menuitem">Pricing</a>
+        <a href="#contact" role="menuitem">Contact</a>
+      </div>
+
+      <button class="header-cta" aria-label="Get started" id="get-started-desktop">Get Started</button>
+
+      <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="bars" aria-hidden="true"></span>
+      </button>
     </nav>
+  </header>
 
-    <main>
-        <section class="hero-section">
-            <div class="video-background">
-                <iframe
-                    src="https://www.youtube.com/embed/e_E9W2vsRbQ?autoplay=1&mute=1&controls=0&loop=1&playlist=e_E9W2vsRbQ"
-                    frameborder="0"
-                    allow="autoplay; encrypted-media"
-                    allowfullscreen
-                    title="VALORANT Intro Video"
-                ></iframe>
-                <div class="video-overlay"></div>
-            </div>
-            <div class="hero-content">
-                <h1>Compete on <span class="highlight">GamersHub</span></h1>
-                <p>
-                    Play the games you love. Compete in free tournaments. Win cash prizes and much more.
-                </p>
-                <div class="cta-buttons">
-                    <a href="#" class="cta-button cta-primary">Get Started</a>
-                    <a href="#" class="cta-button cta-secondary">Create Account</a>
-                </div>
-            </div>
-        </section>
+  <!-- Mobile nav (toggle) -->
+  <div id="mobile-nav" class="mobile-nav" hidden>
+    <nav aria-label="Mobile primary">
+      <a href="#" class="mobile-link">Home</a>
+      <a href="#tournaments" class="mobile-link">Tournaments</a>
+      <a href="#hosting" class="mobile-link">Hosting</a>
+      <a href="#pricing" class="mobile-link">Pricing</a>
+      <a href="#contact" class="mobile-link">Contact</a>
+    </nav>
+  </div>
 
-        <!-- Updated section for available games as a grid -->
-        <section class="games-section">
-            <h2 class="section-title">Available Games</h2>
-            <div class="games-grid">
-                <!-- Game Card 1: Madden NFL 25 -->
-                <div class="game-card">
-                    <span class="beta-label">BETA</span>
-                    <img src="madden25.jpg" alt="Madden NFL 25 cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
-                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
-                        <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__bg-slider">
+        <img src="/t1.jpg" alt="BGMI Pro League Poster" class="active" />
+        <img src="/t2.jpg" alt="Battlegrounds Summer Championship Poster" />
+        <img src="/t3.jpg" alt="India Invitational Grand Finals Poster" />
+      </div>
+
+      <div class="hero__overlay"></div>
+
+      <div class="hero__content" role="region" aria-label="Hero">
+        <!-- Logo was here previously but is now commented out. The JavaScript has been updated to no longer reference this element. -->
+        <h1 id="hero-title" class="tournament-name">PUBG Global Series 2025</h1>
+        <div class="prize-pool" id="prize-pool">Prize Pool: $500,000</div>
+        <p id="tournament-description">
+          The biggest PUBG tournament of the year is here! Join us as the best teams from around the world battle it out in London for the title of Global Champions.
+        </p>
+
+        <a class="btn--primary" href="#" id="cta-learn-more">Tournament Details</a>
+      </div>
+    </section>
+
+    <!-- Matches / Tournaments -->
+    <section id="tournaments" class="section container" aria-labelledby="tournaments-heading">
+      <h2 id="tournaments-heading" style="font-size:1.6rem; margin-bottom:1rem; color:var(--copy);">Matches & Tournaments</h2>
+
+      <div class="panels">
+        <!-- Left Column: Recent Matches Details -->
+        <article class="panel main-panel" role="listitem" aria-labelledby="recent-matches-title">
+            <h3 id="recent-matches-title"><i class="fa-solid fa-hourglass-end" style="margin-right:.5rem"></i>Recent Matches</h3>
+            <ul class="tournament-list">
+                <li>
+                    <div>
+                        <h4>BGMI 2025 Series Match 1</h4>
+                        <p>ESL Masters — BGMI</p>
                     </div>
-                </div>
-                
-                <!-- Game Card 2: Valorant -->
-                <div class="game-card">
-                    <img src="valorant.jpg" alt="Valorant cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">28 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">28.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--accent);">Live</div>
                     </div>
-                </div>
-
-                <!-- Game Card 3: Fortnite -->
-                <div class="game-card">
-                    <img src="fortnite.jpg" alt="Fortnite cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
-                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
-                        <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
-                        <a href="#"><i class="fa-solid fa-gamepad"></i></a>
+                </li>
+                <li>
+                    <div>
+                        <h4>BGMI 2025 Series Quarter Finals</h4>
+                        <p>PUBG Players Tour — KRAFTON</p>
                     </div>
-                </div>
-
-                <!-- Game Card 4: PUBG -->
-                <div class="game-card">
-                    <img src="pubg.jpg" alt="PUBG cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
-                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
-                        <a href="#"><i class="fa-solid fa-mobile-screen-button"></i></a>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">27 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">27.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--muted);">Result: Team Alpha wins</div>
                     </div>
-                </div>
-                
-                <!-- Game Card 5: Rocket League -->
-                <div class="game-card">
-                    <img src="Rocketleague.webp" alt="Rocket League cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-brands fa-playstation"></i></a>
-                        <a href="#"><i class="fa-brands fa-xbox"></i></a>
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                </li>
+                <li>
+                    <div>
+                        <h4>BGMI 2025 Series Semi Finals</h4>
+                        <p>PUBG Players Tour — KRAFTON</p>
                     </div>
-                </div>
-
-                <!-- Game Card 6: Dota 2 -->
-                <div class="game-card">
-                    <img src="dota2_social.jpg" alt="Dota 2 cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">26 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">26.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--accent);">Live</div>
                     </div>
-                </div>
-
-                <!-- Game Card 7: CS2 -->
-                <div class="game-card">
-                    <img src="cs2.jpg" alt="Counter-Strike 2 cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                </li>
+                <li>
+                    <div>
+                        <h4>BGMI India Invitational</h4>
+                        <p>IEM Katowice — BGMI</p>
                     </div>
-                </div>
-
-                <!-- Game Card 8: League of Legends -->
-                <div class="game-card">
-                    <img src="league-of-legends-pc-game-cover.jpg" alt="League of Legends cover image">
-                    <div class="platform-options">
-                        <a href="#"><i class="fa-solid fa-desktop"></i></a>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">25 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">25.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--muted);">Result: Team Bravo wins</div>
                     </div>
+                </li>
+                <li>
+                    <div>
+                        <h4>BGMI 2025 Series Match 5</h4>
+                        <p>PUBG Players Tour — KRAFTON</p>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">24 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">24.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--muted);">Result: Team Gamma wins</div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <h4>BGMI 2025 Series Match 4</h4>
+                        <p>ESL Masters — BGMI</p>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">23 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">23.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--accent);">Live</div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <h4>BGMI 2025 Series Match 3</h4>
+                        <p>IEM Katowice — BGMI</p>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">22 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">22.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--muted);">Result: Team Delta wins</div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <h4>BGMI 2025 Series Match 2</h4>
+                        <p>ESL Masters — BGMI</p>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:var(--muted)">21 Aug 2025</div>
+                        <div style="font-size:.82rem; color:var(--muted)">21.08.2025</div>
+                        <div style="margin-top:0.4rem; font-weight:700; color:var(--muted);">Result: Team Echo wins</div>
+                    </div>
+                </li>
+            </ul>
+        </article>
+
+        <!-- Right Column: Upcoming & Live -->
+        <div class="right-column">
+            <!-- Upcoming tournaments -->
+            <article class="panel panel--small" role="listitem" aria-labelledby="upcoming-title">
+              <h3 id="upcoming-title"><i class="fa-solid fa-calendar-alt" style="margin-right:.5rem"></i>Upcoming</h3>
+              <ul class="tournament-list" aria-label="Upcoming tournaments">
+                <li>
+                  <div>
+                    <h4>Grand Final: TBA vs TBA</h4>
+                    <p>Starts: Jan 22, 2025</p>
+                  </div>
+                  <div style="text-align:right;color:var(--muted)">22 Jan 2025</div>
+                </li>
+                <li>
+                  <div>
+                    <h4>Qualifier 1: Team I vs Team J</h4>
+                    <p>Starts: Jan 21, 2025</p>
+                  </div>
+                  <div style="text-align:right;color:var(--muted)">21 Jan 2025</div>
+                </li>
+              </ul>
+            </article>
+
+            <!-- Live matches -->
+            <article class="panel panel--small" role="listitem" aria-labelledby="live-title">
+              <h3 id="live-title"><i class="fa-solid fa-satellite-dish" style="margin-right:.5rem"></i>Live</h3>
+              <ul class="tournament-list" aria-label="Live matches">
+                <li>
+                  <div>
+                    <h4>VP <span style="font-weight:600; color:var(--muted); margin:0 .5rem">VS</span> M80</h4>
+                    <p>BLAST Open Fall 2025</p>
+                  </div>
+                  <div style="text-align:right">
+                    <span class="live-badge" aria-hidden="true">LIVE</span>
+                    <div style="margin-top:.4rem"><a href="#" aria-label="Watch VP vs M80">Watch</a></div>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <h4>RRO <span style="font-weight:600; color:var(--muted); margin:0 .5rem">VS</span> VES</h4>
+                    <p>Indonesia Kings League Fall 2025</p>
+                  </div>
+                  <div style="text-align:right">
+                    <span class="live-badge" aria-hidden="true">LIVE</span>
+                    <div style="margin-top:.4rem"><a href="#" aria-label="Watch RRO vs VES">Watch</a></div>
+                  </div>
+                </li>
+              </ul>
+            </article>
+
+            <!-- Advertisement Panel -->
+            <article class="panel panel--small" role="listitem" aria-labelledby="ad-title">
+                <h3 id="ad-title"><i class="fa-solid fa-bullhorn" style="margin-right:.5rem"></i>Sponsored</h3>
+                <div style="text-align:center;">
+                    <p style="color:var(--copy); font-size:1.1rem; font-weight:bold; margin-bottom:.5rem;">Elevate Your Game!</p>
+                    <p style="color:var(--muted); font-size:.9rem; line-height:1.4;">
+                        Join the new season with our exclusive gaming gear.
+                    </p>
+                    <a href="#" style="display:inline-block; margin-top:1rem; padding:.5rem 1rem; background:var(--accent); color:var(--bg); font-weight:700; border-radius:6px;">Shop Now</a>
                 </div>
-            </div>
-        </section>
+            </article>
+        </div>
+      </div>
+    </section>
 
-        <!-- New 'Why Choose Us' section with updated layout -->
-        <section class="why-us-section">
-            <h2>Why Choose Us?</h2>
-            <div class="why-us-content">
-                <!-- Achievement 1: Community -->
-                <div class="why-us-item">
-                    <div class="icon"><i class="fa-solid fa-users"></i></div>
-                    <h3>Thriving Community</h3>
-                    <p>Join a community of thousands of passionate gamers and connect with like-minded players.</p>
-                </div>
-                
-                <!-- Achievement 2: Prizes -->
-                <div class="why-us-item">
-                    <div class="icon"><i class="fa-solid fa-trophy"></i></div>
-                    <h3>Epic Prizes</h3>
-                    <p>Compete in free tournaments with massive cash prize pools and exclusive gaming gear.</p>
-                </div>
+    <!-- Highlights Section -->
+    <section id="highlights" class="section container" aria-labelledby="highlights-heading">
+      <h2 id="highlights-heading" style="margin-bottom:.75rem; color:var(--copy)">Featured Highlights</h2>
+      <p style="color:var(--muted); margin-bottom:1rem">The best plays and moments from the biggest tournaments.</p>
+    
+      <div class="highlights-grid">
+        <!-- Clip 1 -->
+        <div class="video-clip">
+          <iframe 
+            src="https://www.youtube.com/embed/C28f73G4y80?autoplay=1&mute=1&controls=0&loop=1&playlist=C28f73G4y80" 
+            title="Esports Highlight Reel 1" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            frameborder="0"
+          ></iframe>
+        </div>
+        <!-- Clip 2 -->
+        <div class="video-clip">
+          <iframe 
+            src="https://www.youtube.com/embed/9w_Y2y_V-94?autoplay=1&mute=1&controls=0&loop=1&playlist=9w_Y2y_V-94" 
+            title="Esports Highlight Reel 2" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            frameborder="0"
+          ></iframe>
+        </div>
+        <!-- Clip 3 -->
+        <div class="video-clip">
+          <iframe 
+            src="https://www.youtube.com/embed/gL91y1b-8_I?autoplay=1&mute=1&controls=0&loop=1&playlist=gL91y1b-8_I" 
+            title="Esports Highlight Reel 3" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            frameborder="0"
+          ></iframe>
+        </div>
+        <!-- Clip 4 -->
+        <div class="video-clip">
+          <iframe 
+            src="https://www.youtube.com/embed/w7g9c2P8cWw?autoplay=1&mute=1&controls=0&loop=1&playlist=w7g9c2P8cWw" 
+            title="Esports Highlight Reel 4" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            frameborder="0"
+          ></iframe>
+        </div>
+        <!-- Clip 5 -->
+        <div class="video-clip">
+          <iframe 
+            src="https://www.youtube.com/embed/oQJ2v3s22eY?autoplay=1&mute=1&controls=0&loop=1&playlist=oQJ2v3s22eY" 
+            title="Esports Highlight Reel 5" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            frameborder="0"
+          ></iframe>
+        </div>
+      </div>
+    </section>
 
-                <!-- Achievement 3: Free to Play -->
-                <div class="why-us-item">
-                    <div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                    <h3>Free to Play</h3>
-                    <p>Enter any tournament at no cost. Your skill is the only thing that matters.</p>
-                </div>
+    <!-- Why Choose Us -->
+    <section class="section container" aria-labelledby="why-heading">
+      <h2 id="why-heading" style="color:var(--copy)">Why choose us?</h2>
+      <div class="why-grid" role="list">
+        <div class="why-item" role="listitem">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          <h3 style="margin:.6rem 0 .25rem 0; color:var(--copy)">Thriving community</h3>
+          <p style="color:var(--muted)">Join thousands of passionate players. Team up, scrim, and find matches fast.</p>
+        </div>
 
-                <!-- Achievement 4: Fair Play -->
-                <div class="why-us-item">
-                    <div class="icon"><i class="fa-solid fa-shield-alt"></i></div>
-                    <h3>Fair Play Guarantee</h3>
-                    <p>We use advanced anti-cheat systems to ensure a level playing field for everyone.</p>
-                </div>
-            </div>
-        </section>
-    </main>
+        <div class="why-item" role="listitem">
+          <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+          <h3 style="margin:.6rem 0 .25rem 0; color:var(--copy)">Epic prizes</h3>
+          <p style="color:var(--muted)">Free tournaments with cash prizes and exclusive gear.</p>
+        </div>
 
-    <script>
-        // JavaScript to handle the mobile menu toggle
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
+        <div class="why-item" role="listitem">
+          <i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i>
+          <h3 style="margin:.6rem 0 .25rem 0; color:var(--copy)">Free to play</h3>
+          <p style="color:var(--muted)">Your skill matters — no entry fees for most events.</p>
+        </div>
 
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('open');
-            navLinks.classList.toggle('nav-active');
+        <div class="why-item" role="listitem">
+          <i class="fa-solid fa-shield-alt" aria-hidden="true"></i>
+          <h3 style="margin:.6rem 0 .25rem 0; color:var(--copy)">Fair play</h3>
+          <p style="color:var(--muted)">Advanced anti-cheat systems and transparent rules.</p>
+        </div>
+      </div>
+    </section>
 
-            const isExpanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
-            hamburger.setAttribute('aria-expanded', !isExpanded);
+    <!-- CTA -->
+    <section class="section" aria-labelledby="cta-heading" style="background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00))">
+      <div class="container" style="text-align:center;">
+        <h2 id="cta-heading" style="margin-bottom:.5rem; color:var(--copy)">Stop scrolling, start playing</h2>
+        <p style="color:var(--muted)">Create your account now and earn 2,000 coins.</p>
+        <div class="cta-hero">
+          <a class="btn btn--primary" href="#" aria-label="Join now and claim bonus">Join Now</a>
+          <a class="btn btn--ghost" href="#" aria-label="Learn more about tournaments">Learn More</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo" id="contact">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom:.55rem;">Gamers<span class="accent">Hub</span></div>
+        <p style="color:var(--muted)">Play the games you love. Compete in free tournaments. Win real money & prizes.</p>
+        <div style="display:flex;gap:.6rem;margin-top:.6rem;">
+          <a href="#" aria-label="Twitter" style="color:var(--muted)"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Facebook" style="color:var(--muted)"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram" style="color:var(--muted)"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube" style="color:var(--muted)"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Marketplace</a></li>
+          <li><a href="#">Madden 25</a></li>
+          <li><a href="#">Brawl Stars</a></li>
+          <li><a href="#">DOTA 2</a></li>
+          <li><a href="#">League of Legends</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">Knowledge Base</a></li>
+          <li><a href="#">News & Blog</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2025 GamersHub. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- =========================
+       JavaScript — accessible, small & focused
+       ========================= -->
+  <script>
+    (function () {
+      // Elements
+      const hamburger = document.querySelector('.hamburger');
+      const mobileNav = document.getElementById('mobile-nav');
+      const navLinks = document.querySelectorAll('.mobile-nav a, .nav-links a');
+
+      // Toggle mobile nav
+      function toggleMobile(open) {
+        const isOpen = typeof open === 'boolean' ? open : hamburger.getAttribute('aria-expanded') === 'true';
+        const newState = !isOpen;
+        hamburger.setAttribute('aria-expanded', String(newState));
+        if (newState) {
+          mobileNav.classList.add('is-open');
+          // trap focus in mobile nav for keyboard users
+          mobileNav.focus();
+          document.body.style.overflow = 'hidden';
+        } else {
+          mobileNav.classList.remove('is-open');
+          document.body.style.overflow = '';
+        }
+      }
+
+      // attach events
+      if (hamburger) {
+        hamburger.addEventListener('click', () => toggleMobile());
+      }
+
+      // close mobile nav on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (hamburger && hamburger.getAttribute('aria-expanded') === 'true') toggleMobile(true);
+        }
+      });
+
+      // close mobile nav when a link is clicked (improves UX)
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (hamburger && hamburger.getAttribute('aria-expanded') === 'true') toggleMobile(true);
         });
-    </script>
+      });
+
+      // Prefer reduced-motion: disable subtle animations programmatically if user prefers
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (prefersReduced.matches) {
+        document.documentElement.classList.add('reduced-motion');
+      }
+
+      // Hero section dynamic content
+      const heroContentData = [
+        {
+          poster: 'https://placehold.co/1920x1080/282828/fff?text=BGMI+Pro+League+2025+Poster',
+          name: 'BGMI Pro League 2025',
+          prize: '$250,000',
+          description: 'The top professional teams battle it out in a highly-competitive league for a massive prize pool and bragging rights. Witness the best of the best in action.'
+        },
+        {
+          poster: 'https://placehold.co/1920x1080/282828/fff?text=Battlegrounds+Summer+Championship+Poster',
+          name: 'Battlegrounds Summer Championship',
+          prize: '$100,000',
+          description: 'A summer showdown featuring the top collegiate and amateur teams from across India. Who will be crowned champion of the season?'
+        },
+        {
+          poster: 'https://placehold.co/1920x1080/282828/fff?text=India+Invitational+Grand+Finals+Poster',
+          name: 'India Invitational Grand Finals',
+          prize: '$150,000',
+          description: 'The final showdown of the year! Four elite teams clash to claim the title and a significant prize. This is a must-watch for all BGMI fans.'
+        }
+      ];
+
+      let currentHeroIndex = 0;
+      const heroImages = document.querySelectorAll('.hero__bg-slider img');
+      const heroContent = document.querySelector('.hero__content');
+      const tournamentName = document.getElementById('hero-title');
+      const prizePool = document.getElementById('prize-pool');
+      const tournamentDescription = document.getElementById('tournament-description');
+
+      function updateHeroContent() {
+        const data = heroContentData[currentHeroIndex];
+        
+        // Start fade-out for content
+        heroContent.classList.remove('active');
+
+        setTimeout(() => {
+            // Update images with fade effect
+            heroImages.forEach((img, index) => {
+              img.classList.remove('active');
+              if (index === currentHeroIndex) {
+                img.classList.add('active');
+              }
+            });
+
+            // Update text content
+            if (data) {
+              tournamentName.textContent = data.name;
+              prizePool.textContent = `Prize Pool: ${data.prize}`;
+              tournamentDescription.textContent = data.description;
+            }
+
+            // Start fade-in for content
+            heroContent.classList.add('active');
+
+            // Move to the next index
+            currentHeroIndex = (currentHeroIndex + 1) % heroContentData.length;
+        }, 1000); // Wait for the fade-out to complete (1 second)
+      }
+      
+      // Set the initial content
+      setTimeout(() => {
+        updateHeroContent();
+      }, 500); // Initial delay to allow page to load
+
+      // Update content every 5 seconds
+      setInterval(updateHeroContent, 5000);
+
+    })();
+  </script>
 </body>
 </html>
